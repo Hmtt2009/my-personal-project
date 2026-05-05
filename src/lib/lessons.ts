@@ -1,4 +1,4 @@
-import type { MarkdownInstance } from "astro";
+import type { MarkdownHeading, MarkdownInstance } from "astro";
 
 type LessonStatus = "draft" | "ready";
 
@@ -32,6 +32,7 @@ export type LessonListItem = LessonMetadata & {
 
 export type LessonDetail = LessonListItem & {
   Content: MarkdownLessonModule["Content"];
+  headings: MarkdownHeading[];
 };
 
 const lessonModules = import.meta.glob<MarkdownLessonModule>(
@@ -53,7 +54,8 @@ export function getAllLessonDetails(): LessonDetail[] {
   return Object.entries(lessonModules)
     .map(([path, module]) => ({
       ...buildLessonListItem(path, module.frontmatter),
-      Content: module.Content
+      Content: module.Content,
+      headings: module.getHeadings()
     }))
     .sort(sortLessonsNewestFirst);
 }

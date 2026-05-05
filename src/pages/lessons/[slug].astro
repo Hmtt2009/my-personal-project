@@ -36,12 +36,32 @@ function formatLessonDate(value: string | undefined): string | undefined {
   }).format(date);
 }
 
-const metadata: Array<[string, string | undefined]> = [
-  ["Source", lesson.sourceType],
-  ["Status", lesson.status],
-  ["Created", formatLessonDate(lesson.createdAt)],
-  ["Updated", formatLessonDate(lesson.updatedAt)]
-];
+function buildMetaLine(): string | undefined {
+  const parts: string[] = [];
+
+  if (lesson.sourceType) {
+    parts.push(lesson.sourceType);
+  }
+
+  const updated = formatLessonDate(lesson.updatedAt);
+  const created = formatLessonDate(lesson.createdAt);
+
+  if (updated) {
+    parts.push(`Updated ${updated}`);
+  } else if (created) {
+    parts.push(`Created ${created}`);
+  }
+
+  return parts.length > 0 ? parts.join(" · ") : undefined;
+}
+
+function isExternalUrl(value: string): boolean {
+  return value.startsWith("http://") || value.startsWith("https://");
+}
+
+const metaLine = buildMetaLine();
+const tocItems = lesson.headings.filter((heading) => heading.depth === 2);
+const showToc = tocItems.length >= 2;
 ---
 
 <!doctype html>
@@ -57,43 +77,57 @@ const metadata: Array<[string, string | undefined]> = [
   </head>
   <body>
     <main class="page-shell lesson-page">
-      <a class="back-link" href={import.meta.env.BASE_URL}>Back to library</a>
+      <a class="back-link" href={import.meta.env.BASE_URL}>← Back to library</a>
 
       <article>
         <header class="lesson-header">
-          <p class="eyebrow">Prepared lesson</p>
-          <h1>{lesson.title}</h1>
+          <h1>
+            {lesson.title}
+            {lesson.status === "draft" && (
+              <span class="draft-badge">Draft</span>
+            )}
+          </h1>
           <p class="lesson-big-idea">{lesson.bigIdea}</p>
           {lesson.description && (
             <p class="lesson-description">{lesson.description}</p>
           )}
-
-          <dl class="lesson-meta lesson-meta-large">
-            {
-              metadata.map(([label, value]) =>
-                value ? (
-                  <div>
-                    <dt>{label}</dt>
-                    <dd>{value}</dd>
-                  </div>
-                ) : null
-              )
-            }
-          </dl>
+          {metaLine && <p class="lesson-meta-line">{metaLine}</p>}
         </header>
+
+        {showToc && (
+          <details class="lesson-toc">
+            <summary>Sections ({tocItems.length})</summary>
+            <ol class="lesson-toc-list">
+              {tocItems.map((heading) => (
+                <li>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </details>
+        )}
 
         <section class="lesson-body" aria-label="Simplified lesson">
           <Content />
         </section>
 
         <section class="source-reference" aria-labelledby="source-reference-title">
-          <h2 id="source-reference-title">Source reference</h2>
-          <p>
-            Source material is kept as reference only. The simplified lesson is
-            the main reading content.
-          </p>
+          <h2 id="source-reference-title">Where this came from</h2>
+          <p>This lesson was simplified from the material below.</p>
           <ul>
-            {lesson.sourceRef.map((source) => <li>{source}</li>)}
+            {lesson.sourceRef.map((source) =>
+              isExternalUrl(source) ? (
+                <li>
+                  <a href={source} rel="noreferrer">
+                    {source}
+                  </a>
+                </li>
+              ) : (
+                <li>
+                  <code>{source}</code>
+                </li>
+              )
+            )}
           </ul>
         </section>
       </article>

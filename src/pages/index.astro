@@ -24,6 +24,14 @@ function formatDate(value: string | undefined): string | undefined {
     dateStyle: "medium"
   }).format(date);
 }
+
+function buildCardFootnote(lesson: LessonListItem): string | undefined {
+  const parts = [lesson.sourceType, formatLessonDate(lesson)].filter(
+    (part): part is string => Boolean(part)
+  );
+
+  return parts.length > 0 ? parts.join(" · ") : undefined;
+}
 ---
 
 <!doctype html>
@@ -33,59 +41,49 @@ function formatDate(value: string | undefined): string | undefined {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A static personal learning reader for prepared simple-English lessons."
+      content="Simple lessons, written for easy understanding."
     />
-    <title>Personal Learning Reader</title>
+    <title>Your learning shelf</title>
   </head>
   <body>
     <main class="page-shell">
       <section class="intro" aria-labelledby="page-title">
-        <p class="eyebrow">Static reader foundation</p>
-        <h1 id="page-title">Personal Learning Reader</h1>
-        <p>
-          Choose a prepared lesson and read it in simple English.
+        <h1 id="page-title">Your learning shelf</h1>
+        <p class="intro-tagline">
+          Simple lessons, written for easy understanding.
         </p>
-        <p class="library-count">{lessons.length} prepared lessons</p>
+        <p class="library-count">{lessons.length} lessons</p>
       </section>
 
       <section class="library" aria-labelledby="library-title">
-        <h2 id="library-title">Library</h2>
+        <h2 id="library-title" class="sr-only">Library</h2>
 
         {
           lessons.length > 0 ? (
             <ol class="lesson-list" aria-label="Prepared lessons">
               {lessons.map((lesson) => {
-                const lessonDate = formatLessonDate(lesson);
+                const footnote = buildCardFootnote(lesson);
 
                 return (
                   <li class="lesson-card">
                     <a class="lesson-card-link" href={`${import.meta.env.BASE_URL}lessons/${lesson.slug}/`}>
                       <div class="lesson-card-header">
-                        <div>
+                        <div class="lesson-card-titleblock">
                           <h3>{lesson.title}</h3>
                           <p class="lesson-big-idea">{lesson.bigIdea}</p>
                         </div>
-                        <span class="status-label">{lesson.status}</span>
+                        {lesson.status === "draft" && (
+                          <span class="draft-badge">Draft</span>
+                        )}
                       </div>
 
                       {lesson.description && (
                         <p class="lesson-description">{lesson.description}</p>
                       )}
 
-                      <dl class="lesson-meta">
-                        {lesson.sourceType && (
-                          <div>
-                            <dt>Source</dt>
-                            <dd>{lesson.sourceType}</dd>
-                          </div>
-                        )}
-                        {lessonDate && (
-                          <div>
-                            <dt>Date</dt>
-                            <dd>{lessonDate}</dd>
-                          </div>
-                        )}
-                      </dl>
+                      {footnote && (
+                        <p class="lesson-card-footnote">{footnote}</p>
+                      )}
                     </a>
                   </li>
                 );
@@ -93,9 +91,10 @@ function formatDate(value: string | undefined): string | undefined {
             </ol>
           ) : (
             <div class="empty-state">
-              <h3>No prepared lessons yet</h3>
+              <h3>Nothing to read yet.</h3>
               <p>
-                Add Markdown lessons to the repository and they will appear here.
+                Add a Markdown lesson to <code>content/lessons/</code> and it
+                will show up here.
               </p>
             </div>
           )
