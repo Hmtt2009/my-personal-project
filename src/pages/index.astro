@@ -32,6 +32,10 @@ function buildCardFootnote(lesson: LessonListItem): string | undefined {
 
   return parts.length > 0 ? parts.join(" · ") : undefined;
 }
+
+const readyCount = lessons.filter((lesson) => lesson.status === "ready").length;
+const draftCount = lessons.length - readyCount;
+const lessonCountLabel = `${lessons.length} ${lessons.length === 1 ? "lesson" : "lessons"}`;
 ---
 
 <!doctype html>
@@ -41,49 +45,72 @@ function buildCardFootnote(lesson: LessonListItem): string | undefined {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Simple lessons, written for easy understanding."
+      content="A calm personal learning shelf for simple, easy-to-understand lessons."
     />
     <title>Your learning shelf</title>
   </head>
-  <body>
-    <main class="page-shell">
-      <section class="intro" aria-labelledby="page-title">
-        <h1 id="page-title">Your learning shelf</h1>
-        <p class="intro-tagline">
-          Simple lessons, written for easy understanding.
-        </p>
-        <p class="library-count">{lessons.length} lessons</p>
+  <body class="home-page">
+    <main class="app-shell">
+      <section class="home-hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="kicker">Personal learning reader</p>
+          <h1 id="page-title">Your learning shelf</h1>
+          <p class="hero-tagline">
+            Simple lessons, written for easy understanding.
+          </p>
+        </div>
+
+        <div class="hero-panel" aria-label="Library summary">
+          <span class="hero-panel-label">Today&apos;s shelf</span>
+          <strong>{lessonCountLabel}</strong>
+          <span>
+            {draftCount > 0
+              ? `${draftCount} draft ${draftCount === 1 ? "lesson" : "lessons"}`
+              : "All lessons ready"}
+          </span>
+        </div>
       </section>
 
-      <section class="library" aria-labelledby="library-title">
-        <h2 id="library-title" class="sr-only">Library</h2>
+      <section class="library-section" aria-labelledby="library-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Library</p>
+            <h2 id="library-title">Pick what to understand next</h2>
+          </div>
+          <p>{lessonCountLabel} prepared for slow, clear reading.</p>
+        </div>
 
         {
           lessons.length > 0 ? (
-            <ol class="lesson-list" aria-label="Prepared lessons">
-              {lessons.map((lesson) => {
+            <ol class="lesson-grid" aria-label="Prepared lessons">
+              {lessons.map((lesson, index) => {
                 const footnote = buildCardFootnote(lesson);
 
                 return (
                   <li class="lesson-card">
                     <a class="lesson-card-link" href={`${import.meta.env.BASE_URL}lessons/${lesson.slug}/`}>
-                      <div class="lesson-card-header">
-                        <div class="lesson-card-titleblock">
-                          <h3>{lesson.title}</h3>
-                          <p class="lesson-big-idea">{lesson.bigIdea}</p>
+                      <span class="lesson-number" aria-hidden="true">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <div class="lesson-card-content">
+                        <div class="lesson-card-topline">
+                          {footnote && <span>{footnote}</span>}
+                          {lesson.status === "draft" && (
+                            <span class="draft-badge">Draft</span>
+                          )}
                         </div>
-                        {lesson.status === "draft" && (
-                          <span class="draft-badge">Draft</span>
+
+                        <h3>{lesson.title}</h3>
+                        <p class="lesson-big-idea">{lesson.bigIdea}</p>
+                        {lesson.description && (
+                          <p class="lesson-description">{lesson.description}</p>
                         )}
                       </div>
 
-                      {lesson.description && (
-                        <p class="lesson-description">{lesson.description}</p>
-                      )}
-
-                      {footnote && (
-                        <p class="lesson-card-footnote">{footnote}</p>
-                      )}
+                      <span class="lesson-card-action" aria-hidden="true">
+                        Read lesson →
+                      </span>
                     </a>
                   </li>
                 );
@@ -91,10 +118,11 @@ function buildCardFootnote(lesson: LessonListItem): string | undefined {
             </ol>
           ) : (
             <div class="empty-state">
+              <span aria-hidden="true">✦</span>
               <h3>Nothing to read yet.</h3>
               <p>
                 Add a Markdown lesson to <code>content/lessons/</code> and it
-                will show up here.
+                will appear here as a calm reading card.
               </p>
             </div>
           )
