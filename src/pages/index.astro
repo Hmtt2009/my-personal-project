@@ -1,5 +1,8 @@
 ---
+import { getAllLessons } from "../lib/lessons";
 import "../styles/global.css";
+
+const lessons = getAllLessons();
 ---
 
 <!doctype html>
@@ -21,6 +24,7 @@ import "../styles/global.css";
         <p>
           This Astro foundation is ready for prepared lessons from the repository.
         </p>
+        <p class="lesson-count">Loaded {lessons.length} prepared lessons.</p>
       </section>
     </main>
   </body>
