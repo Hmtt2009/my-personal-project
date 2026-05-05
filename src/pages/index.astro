@@ -59,32 +59,34 @@ function formatDate(value: string | undefined): string | undefined {
 
                 return (
                   <li class="lesson-card">
-                    <div class="lesson-card-header">
-                      <div>
-                        <h3>{lesson.title}</h3>
-                        <p class="lesson-big-idea">{lesson.bigIdea}</p>
+                    <a class="lesson-card-link" href={`/lessons/${lesson.slug}/`}>
+                      <div class="lesson-card-header">
+                        <div>
+                          <h3>{lesson.title}</h3>
+                          <p class="lesson-big-idea">{lesson.bigIdea}</p>
+                        </div>
+                        <span class="status-label">{lesson.status}</span>
                       </div>
-                      <span class="status-label">{lesson.status}</span>
-                    </div>
 
-                    {lesson.description && (
-                      <p class="lesson-description">{lesson.description}</p>
-                    )}
+                      {lesson.description && (
+                        <p class="lesson-description">{lesson.description}</p>
+                      )}
 
-                    <dl class="lesson-meta">
-                      {lesson.sourceType && (
-                        <div>
-                          <dt>Source</dt>
-                          <dd>{lesson.sourceType}</dd>
-                        </div>
-                      )}
-                      {lessonDate && (
-                        <div>
-                          <dt>Date</dt>
-                          <dd>{lessonDate}</dd>
-                        </div>
-                      )}
-                    </dl>
+                      <dl class="lesson-meta">
+                        {lesson.sourceType && (
+                          <div>
+                            <dt>Source</dt>
+                            <dd>{lesson.sourceType}</dd>
+                          </div>
+                        )}
+                        {lessonDate && (
+                          <div>
+                            <dt>Date</dt>
+                            <dd>{lessonDate}</dd>
+                          </div>
+                        )}
+                      </dl>
+                    </a>
                   </li>
                 );
               })}
