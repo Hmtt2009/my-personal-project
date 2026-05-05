@@ -32,6 +32,7 @@ body {
 .intro {
   display: grid;
   gap: 0.75rem;
+  margin-bottom: 3rem;
 }
 
 .eyebrow {
@@ -49,14 +50,96 @@ h1 {
   line-height: 1.15;
 }
 
+h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.25;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.35;
+}
+
 p {
   max-width: 36rem;
   margin: 0;
 }
 
-.lesson-count {
+.library-count {
   color: #445244;
   font-weight: 700;
+}
+
+.library {
+  display: grid;
+  gap: 1rem;
+}
+
+.lesson-list {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.lesson-card,
+.empty-state {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: #ffffff;
+  border: 1px solid #e5e0d6;
+  border-radius: 8px;
+}
+
+.lesson-card-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.lesson-big-idea,
+.lesson-description {
+  color: #42433d;
+}
+
+.status-label {
+  flex: 0 0 auto;
+  padding: 0.2rem 0.55rem;
+  color: #445244;
+  background: #eef2ed;
+  border: 1px solid #d8e0d5;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-transform: capitalize;
+}
+
+.lesson-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin: 0;
+  color: #5f625a;
+  font-size: 0.875rem;
+}
+
+.lesson-meta div {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.lesson-meta dt {
+  font-weight: 700;
+}
+
+.lesson-meta dd {
+  margin: 0;
 }
 
 @media (max-width: 40rem) {
@@ -67,5 +150,9 @@ p {
 
   h1 {
     font-size: 1.8rem;
+  }
+
+  .lesson-card-header {
+    display: grid;
   }
 }

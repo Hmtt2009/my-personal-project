@@ -1,8 +1,29 @@
 ---
 import { getAllLessons } from "../lib/lessons";
+import type { LessonListItem } from "../lib/lessons";
 import "../styles/global.css";
 
 const lessons = getAllLessons();
+
+function formatLessonDate(lesson: LessonListItem): string | undefined {
+  return formatDate(lesson.updatedAt) ?? formatDate(lesson.createdAt);
+}
+
+function formatDate(value: string | undefined): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium"
+  }).format(date);
+}
 ---
 
 <!doctype html>
@@ -22,9 +43,61 @@ const lessons = getAllLessons();
         <p class="eyebrow">Static reader foundation</p>
         <h1 id="page-title">Personal Learning Reader</h1>
         <p>
-          This Astro foundation is ready for prepared lessons from the repository.
+          Choose a prepared lesson and read it in simple English.
         </p>
-        <p class="lesson-count">Loaded {lessons.length} prepared lessons.</p>
+        <p class="library-count">{lessons.length} prepared lessons</p>
+      </section>
+
+      <section class="library" aria-labelledby="library-title">
+        <h2 id="library-title">Library</h2>
+
+        {
+          lessons.length > 0 ? (
+            <ol class="lesson-list" aria-label="Prepared lessons">
+              {lessons.map((lesson) => {
+                const lessonDate = formatLessonDate(lesson);
+
+                return (
+                  <li class="lesson-card">
+                    <div class="lesson-card-header">
+                      <div>
+                        <h3>{lesson.title}</h3>
+                        <p class="lesson-big-idea">{lesson.bigIdea}</p>
+                      </div>
+                      <span class="status-label">{lesson.status}</span>
+                    </div>
+
+                    {lesson.description && (
+                      <p class="lesson-description">{lesson.description}</p>
+                    )}
+
+                    <dl class="lesson-meta">
+                      {lesson.sourceType && (
+                        <div>
+                          <dt>Source</dt>
+                          <dd>{lesson.sourceType}</dd>
+                        </div>
+                      )}
+                      {lessonDate && (
+                        <div>
+                          <dt>Date</dt>
+                          <dd>{lessonDate}</dd>
+                        </div>
+                      )}
+                    </dl>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <div class="empty-state">
+              <h3>No prepared lessons yet</h3>
+              <p>
+                Add Markdown lessons to the repository and they will appear here.
+              </p>
+            </div>
+          )
+        }
       </section>
     </main>
   </body>
