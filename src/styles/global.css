@@ -54,6 +54,11 @@ p {
   margin: 0;
 }
 
+.lesson-count {
+  color: #445244;
+  font-weight: 700;
+}
+
 @media (max-width: 40rem) {
   .page-shell {
     width: min(100% - 1.25rem, 42rem);
