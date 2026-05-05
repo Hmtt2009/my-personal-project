@@ -1,3 +1,5 @@
+import type { MarkdownInstance } from "astro";
+
 type LessonStatus = "draft" | "ready";
 
 type LessonFrontmatter = {
@@ -11,9 +13,7 @@ type LessonFrontmatter = {
   sourceRef?: unknown;
 };
 
-type MarkdownLessonModule = {
-  frontmatter: LessonFrontmatter;
-};
+type MarkdownLessonModule = MarkdownInstance<LessonFrontmatter>;
 
 export type LessonMetadata = {
   title: string;
@@ -30,6 +30,10 @@ export type LessonListItem = LessonMetadata & {
   slug: string;
 };
 
+export type LessonDetail = LessonListItem & {
+  Content: MarkdownLessonModule["Content"];
+};
+
 const lessonModules = import.meta.glob<MarkdownLessonModule>(
   "/content/lessons/*.md",
   { eager: true }
@@ -43,6 +47,19 @@ export function getAllLessons(): LessonListItem[] {
 
 export function getReadyLessons(): LessonListItem[] {
   return getAllLessons().filter((lesson) => lesson.status === "ready");
+}
+
+export function getAllLessonDetails(): LessonDetail[] {
+  return Object.entries(lessonModules)
+    .map(([path, module]) => ({
+      ...buildLessonListItem(path, module.frontmatter),
+      Content: module.Content
+    }))
+    .sort(sortLessonsNewestFirst);
+}
+
+export function getLessonBySlug(slug: string): LessonDetail | undefined {
+  return getAllLessonDetails().find((lesson) => lesson.slug === slug);
 }
 
 function buildLessonListItem(

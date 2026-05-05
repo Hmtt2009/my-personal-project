@@ -87,12 +87,31 @@ p {
 
 .lesson-card,
 .empty-state {
-  display: grid;
-  gap: 1rem;
-  padding: 1.25rem;
+  overflow: hidden;
   background: #ffffff;
   border: 1px solid #e5e0d6;
   border-radius: 8px;
+}
+
+.empty-state {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.lesson-card-link {
+  display: grid;
+  gap: 1rem;
+  min-height: 100%;
+  padding: 1.25rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lesson-card-link:hover,
+.lesson-card-link:focus-visible {
+  background: #fbfaf6;
+  outline: none;
 }
 
 .lesson-card-header {
@@ -139,6 +158,78 @@ p {
 }
 
 .lesson-meta dd {
+  margin: 0;
+}
+
+.lesson-page {
+  width: min(100% - 2rem, 46rem);
+}
+
+.back-link {
+  display: inline-flex;
+  margin-bottom: 2rem;
+  color: #445244;
+  font-weight: 700;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+}
+
+.lesson-header {
+  display: grid;
+  gap: 0.9rem;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e5e0d6;
+}
+
+.lesson-meta-large {
+  margin-top: 0.25rem;
+}
+
+.lesson-body {
+  display: grid;
+  gap: 1rem;
+}
+
+.lesson-body > * {
+  margin: 0;
+}
+
+.lesson-body h1,
+.lesson-body h2,
+.lesson-body h3 {
+  margin-top: 1.25rem;
+}
+
+.lesson-body h1 {
+  font-size: 1.75rem;
+}
+
+.lesson-body h2 {
+  font-size: 1.35rem;
+}
+
+.lesson-body ul,
+.lesson-body ol {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.source-reference {
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 2rem;
+  margin-top: 2.5rem;
+  color: #5f625a;
+  border-top: 1px solid #e5e0d6;
+}
+
+.source-reference ul {
+  display: grid;
+  gap: 0.35rem;
+  padding-left: 1.25rem;
   margin: 0;
 }
 
