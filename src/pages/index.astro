@@ -59,7 +59,7 @@ function formatDate(value: string | undefined): string | undefined {
 
                 return (
                   <li class="lesson-card">
-                    <a class="lesson-card-link" href={`/lessons/${lesson.slug}/`}>
+                    <a class="lesson-card-link" href={`${import.meta.env.BASE_URL}lessons/${lesson.slug}/`}>
                       <div class="lesson-card-header">
                         <div>
                           <h3>{lesson.title}</h3>
