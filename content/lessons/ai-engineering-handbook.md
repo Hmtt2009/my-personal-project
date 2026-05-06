@@ -482,22 +482,31 @@ That is a workflow because the steps are fixed.
 
 ## Suggested visual
 
-A simple diagram would help.
+Type: System diagram.
 
-Draw a box called "User goal" on the left.
+Purpose: Show that AI engineering connects several parts into one useful system.
 
-Draw arrows to four boxes:
+Description: A simple left-to-right diagram that starts with a user goal, passes through the main AI engineering parts, and ends with a useful AI system.
+
+Labels:
+
+- "User goal"
+- "LLM brain"
+- "Instructions and prompts"
+- "Knowledge: RAG, vectors, cache"
+- "Tools and actions"
+- "Useful AI system"
+
+Layout idea: Put "User goal" on the left. Draw arrows from it to four middle boxes:
 
 1. "LLM brain"
 2. "Instructions and prompts"
 3. "Knowledge: RAG, vectors, cache"
 4. "Tools and actions"
 
-Then draw one final box on the right called "Useful AI system."
+Then draw arrows from those four boxes into one final box on the right called "Useful AI system."
 
-Under the diagram, add a small note:
-
-"AI engineering connects these parts so the system can solve a real problem."
+What to notice: AI engineering connects the model, instructions, knowledge, and tools so the system can solve a real problem.
 
 ## Common confusion
 
