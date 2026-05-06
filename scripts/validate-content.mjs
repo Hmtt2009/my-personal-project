@@ -165,6 +165,33 @@ async function validateSourceRefs(sourceRef, relativeFile, slug) {
 }
 
 function resolveLocalSourceRef(ref, slug) {
+  const canonicalLessonSource = `content/sources/${slug}`;
+  const normalizedRef = normalizeRepoRef(ref);
+
+  if (path.isAbsolute(ref)) {
+    return {
+      ok: false,
+      reason: `must be a repo-relative path under ${canonicalLessonSource}/ or be a stable URL.`
+    };
+  }
+
+  if (hasTraversalSegment(ref)) {
+    return {
+      ok: false,
+      reason: "must not include '..' path traversal segments."
+    };
+  }
+
+  if (
+    normalizedRef !== canonicalLessonSource &&
+    !normalizedRef.startsWith(`${canonicalLessonSource}/`)
+  ) {
+    return {
+      ok: false,
+      reason: `must use a repo-relative path under ${canonicalLessonSource}/ for this lesson.`
+    };
+  }
+
   const resolvedPath = path.resolve(rootDir, ref);
   const lessonSourcesDir = path.join(sourcesDir, slug);
 
@@ -185,6 +212,14 @@ function resolveLocalSourceRef(ref, slug) {
   return { ok: true, path: resolvedPath };
 }
 
+function normalizeRepoRef(ref) {
+  return ref.replace(/\\/g, "/").replace(/\/+$/g, "");
+}
+
+function hasTraversalSegment(ref) {
+  return ref.split(/[\\/]+/).includes("..");
+}
+
 function isInsideOrSame(childPath, parentPath) {
   const relativePath = path.relative(parentPath, childPath);
 
@@ -202,12 +237,27 @@ function runPathSafetySelfCheck() {
       ok: true
     },
     {
+      ref: "content/sources/sample/",
+      slug: "sample",
+      ok: true
+    },
+    {
       ref: "content/sources/other/source.md",
       slug: "example",
       ok: false
     },
     {
       ref: "content/sources/example/../../README.md",
+      slug: "example",
+      ok: false
+    },
+    {
+      ref: "content/sources/example/../example/source.md",
+      slug: "example",
+      ok: false
+    },
+    {
+      ref: path.join(rootDir, "content", "sources", "example", "source.md"),
       slug: "example",
       ok: false
     }
