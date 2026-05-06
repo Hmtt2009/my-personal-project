@@ -80,6 +80,10 @@ code {
 
 .brand-mark,
 .back-link {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding: 0 0.35rem;
   color: var(--ink);
   font-weight: 700;
   text-decoration: none;
@@ -328,6 +332,7 @@ code {
 .empty-state code,
 .lesson-body code,
 .source-reference code {
+  display: inline-block;
   padding: 0.1rem 0.35rem;
   background: var(--sage-soft);
   border-radius: 5px;
@@ -355,7 +360,7 @@ code {
 
 .reading-article {
   display: grid;
-  gap: 3rem;
+  gap: 2.5rem;
   max-width: 46rem;
   margin: 0 auto;
 }
@@ -399,6 +404,42 @@ code {
   content: "/";
   margin-right: 0.75rem;
   color: var(--border);
+}
+
+.lesson-sections {
+  padding: 1rem 1.1rem;
+  background: rgba(255, 253, 248, 0.58);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.lesson-sections ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.lesson-sections a {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  color: var(--ink-soft);
+  background: var(--paper-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  font-size: 0.86rem;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.lesson-sections a:hover,
+.lesson-sections a:focus-visible {
+  color: var(--sage);
+  border-color: var(--border);
 }
 
 .lesson-body {

@@ -59,8 +59,29 @@ function isExternalUrl(value: string): boolean {
   return value.startsWith("http://") || value.startsWith("https://");
 }
 
+function formatSourceLabel(source: string, index: number): string {
+  const fallback = `Source ${index + 1}`;
+
+  if (isExternalUrl(source)) {
+    try {
+      const url = new URL(source);
+      const host = url.hostname.replace(/^www\./, "");
+      return `${fallback}: ${host}`;
+    } catch {
+      return fallback;
+    }
+  }
+
+  const trimmed = source.replace(/\/$/, "");
+  const filename = trimmed.split("/").at(-1);
+
+  return filename ? `${fallback}: ${filename}` : fallback;
+}
+
 const metaLine = buildMetaLine();
 const sourceCountLabel = `${lesson.sourceRef.length} ${lesson.sourceRef.length === 1 ? "source" : "sources"}`;
+const tocItems = lesson.headings.filter((heading) => heading.depth === 2);
+const showToc = tocItems.length >= 2;
 ---
 
 <!doctype html>
@@ -97,6 +118,21 @@ const sourceCountLabel = `${lesson.sourceRef.length} ${lesson.sourceRef.length =
           </div>
         </header>
 
+        {
+          showToc && (
+            <nav class="lesson-sections" aria-label="Lesson sections">
+              <p class="section-kicker">Sections</p>
+              <ol>
+                {tocItems.map((heading) => (
+                  <li>
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )
+        }
+
         <section class="lesson-body" aria-label="Simplified lesson">
           <Content />
         </section>
@@ -108,16 +144,21 @@ const sourceCountLabel = `${lesson.sourceRef.length} ${lesson.sourceRef.length =
           </div>
           <p>This lesson was prepared from the references below. The full source stays outside the main reading flow.</p>
           <ul>
-            {lesson.sourceRef.map((source) =>
+            {lesson.sourceRef.map((source, index) =>
               isExternalUrl(source) ? (
                 <li>
-                  <a href={source} rel="noreferrer">
-                    {source}
+                  <a
+                    href={source}
+                    rel="noreferrer"
+                    title={source}
+                    aria-label={`Open source reference: ${source}`}
+                  >
+                    {formatSourceLabel(source, index)}
                   </a>
                 </li>
               ) : (
                 <li>
-                  <code>{source}</code>
+                  <code title={source}>{formatSourceLabel(source, index)}</code>
                 </li>
               )
             )}
