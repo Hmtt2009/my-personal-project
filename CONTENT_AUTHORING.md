@@ -32,9 +32,11 @@ Do not use this guide to:
 
 1. Place source material in `content/sources/[lesson-slug]/`.
 2. Pick a slug. Use the same slug for the source folder and the lesson file.
-3. Create the lesson file at `content/lessons/[lesson-slug].md`.
-4. Write the YAML frontmatter and the lesson body.
-5. Set `status: draft` while you write. Set `status: ready` only when the lesson passes the validation checklist.
+3. Read all relevant source files in the source folder before writing.
+4. Create the lesson file at `content/lessons/[lesson-slug].md`.
+5. Write the YAML frontmatter and the lesson body.
+6. Set `status: draft` while you write.
+7. Set `status: ready` only when the user explicitly approves the lesson as ready.
 
 ---
 
@@ -57,8 +59,12 @@ Examples:
 
 - Path: `content/sources/[lesson-slug]/`
 - One folder per lesson.
-- Multiple files allowed: PDFs, transcripts, plain text notes, screenshots, exported web pages, etc.
-- The assistant should read source files as input but should not edit them.
+- `raw.txt` is recommended for the main text source, but it is not mandatory.
+- A source folder may contain one file or many files.
+- Multiple text or Markdown source files are allowed, such as `raw.txt`, `notes.md`, `part-1.txt`, or `reference.md`.
+- Other source formats may be present as reference material, but v1 content preparation should stay manual and assistant-supported.
+- The assistant must read all relevant files in the source folder before creating or updating the prepared lesson.
+- The assistant should read source files as input but should not edit them unless the user explicitly asks.
 - Source files are not shown in the app reading view by default. They are reference only.
 
 ---
@@ -248,9 +254,13 @@ The good rewrite keeps every idea: chlorophyll, sunlight, glucose, water and air
 
 ---
 
-## 11. Suggesting visuals without generating images
+## 11. Visual specs without generating images
 
-The app does not generate or display images in v1. Visuals are described in plain text only.
+For v1, do not generate images.
+
+Do not assume the app can render advanced diagrams yet.
+
+Visuals are described in Markdown as clear instructions for later rendering or generation. Prefer a `Suggested visual` or `Visual Spec` section written in plain Markdown.
 
 When to add a "Suggested visual" section:
 
@@ -259,28 +269,40 @@ When to add a "Suggested visual" section:
 
 How to write the section:
 
-- Describe what the visual shows.
-- Describe the labels, axes, arrows, or rows and columns.
-- Describe what the reader should notice.
+- **Type of visual:** drawing, diagram, table, chart, flowchart, timeline, map, or other simple format.
+- **Purpose:** what the visual helps the reader understand.
+- **Description:** what the visual shows.
+- **Labels:** labels, axes, arrows, rows, columns, or callouts.
+- **Layout idea:** how the parts should be arranged.
+- **What to notice:** the main idea the reader should see.
 
 What not to do:
 
 - Do not generate, embed, or link to image files.
 - Do not link to external image URLs.
+- Do not require Mermaid or any other diagram syntax for v1.
+- Mention Mermaid only if the user specifically requests Mermaid later.
 - Do not add a "Suggested visual" section just to fill the structure. Skip it when no visual would help.
 
 Example:
 
-> **Suggested visual**
+> ## Suggested visual
 >
-> A simple diagram of a leaf with three arrows.
+> **Type of visual:** Simple labeled diagram.
 >
-> - One arrow labeled "Sunlight" points down onto the leaf.
-> - One arrow labeled "Water" points up from the roots into the leaf.
-> - One arrow labeled "Air (carbon dioxide)" points into the leaf from the side.
-> - One arrow labeled "Oxygen" points out of the leaf back into the air.
+> **Purpose:** Show what a leaf takes in and gives out during photosynthesis.
 >
-> The reader should notice that the leaf takes in three things and gives one thing back.
+> **Description:** Draw a leaf in the middle with arrows going in and out.
+>
+> **Labels:**
+> - Sunlight
+> - Water
+> - Air (carbon dioxide)
+> - Oxygen
+>
+> **Layout idea:** Put the leaf in the center. Put sunlight above it. Put water below it. Put air on the left. Put oxygen leaving on the right.
+>
+> **What to notice:** The leaf takes in three things and gives one thing back.
 
 ---
 
@@ -296,11 +318,12 @@ Example:
 `ready`:
 
 - The lesson is complete and follows every rule in this guide.
+- The user explicitly approved marking it as ready.
 - Frontmatter is complete and valid.
 - Source references point to real files or real URLs.
 - No placeholders, no TODOs, no invented facts.
 
-Promotion checklist (run before flipping `draft` to `ready`):
+Promotion checklist (run before flipping `draft` to `ready`, and only after explicit user approval):
 
 - [ ] All required frontmatter fields are present and valid.
 - [ ] `sourceRef` lists every source actually used, and every entry resolves.
@@ -310,6 +333,12 @@ Promotion checklist (run before flipping `draft` to `ready`):
 - [ ] No new facts have been invented.
 - [ ] Voice and language rules are followed throughout.
 - [ ] `updatedAt` reflects the current date.
+
+Ready lesson safety:
+
+- Do not mark a new lesson as `ready` unless the user explicitly approves it.
+- Do not overwrite or heavily rewrite an existing `ready` lesson unless the user explicitly asks.
+- If the user asks for small edits to a `ready` lesson, keep the change narrow and preserve the approved structure.
 
 ---
 
@@ -326,6 +355,9 @@ Promotion checklist (run before flipping `draft` to `ready`):
 - Do not add dependencies.
 - Do not add or rename frontmatter fields. The build will fail.
 - Do not edit the source files in `content/sources/`.
+- Do not mark a lesson as `ready` without explicit user approval.
+- Do not overwrite or heavily rewrite an existing `ready` lesson without explicit user approval.
+- Do not require Mermaid, image generation, or advanced diagram rendering for v1.
 
 ---
 
@@ -339,7 +371,7 @@ title: "How Rain Forms"
 bigIdea: "Rain happens when tiny water drops in clouds join together and become heavy enough to fall."
 description: "A simple explanation of where rain comes from."
 sourceType: "article"
-status: "ready"
+status: "draft"
 createdAt: "2026-05-05"
 updatedAt: "2026-05-05"
 sourceRef:
@@ -425,6 +457,7 @@ Before you finish, confirm each item:
 - [ ] Slug matches the source folder name and the lesson filename.
 - [ ] Every required frontmatter field is present and the type is correct.
 - [ ] `status` is exactly `draft` or `ready`.
+- [ ] New lessons start as `draft` unless the user explicitly approved `ready`.
 - [ ] `sourceRef` is a non-empty array; every entry is a repo-relative path or a stable URL, and every entry resolves.
 - [ ] All applicable structure sections are present and in order.
 - [ ] The "Simple explanation" section covers every important idea from the source.
