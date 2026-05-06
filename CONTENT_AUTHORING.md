@@ -10,6 +10,10 @@ For repo-wide rules see `AGENTS.md`. For the full product intent see `.planning/
 
 Build validation is useful, but limited. The build checks basic metadata, type errors, content loading, and static route generation. It does **not** prove lesson quality, full source coverage, factual faithfulness, or compliance with the writing philosophy. Assistants must still perform the source inventory, source coverage pass, and writing-quality checks in this guide.
 
+Content validation is available with `npm run validate:content`. It checks lesson filenames, frontmatter, source references, core sections, and the "Suggested visual" structure. It may print warnings for practical quality guardrails. Warnings mean "review this carefully." Errors mean the content breaks required structure or repository references and should be fixed before merging.
+
+Content validation and build validation do not replace human lesson review. A lesson still needs source coverage review, writing-quality review, and explicit user approval before `status` can become `ready`.
+
 `content/lessons/sample.md` is only a smoke test fixture for the content model and build. It is not a quality example and should not be copied as a lesson-writing pattern.
 
 ---
@@ -89,13 +93,13 @@ Source inventory step:
 
 ## 6. Required YAML frontmatter
 
-These fields are validated by `src/lib/lessons.ts`. Do not invent new fields. Do not rename existing fields. Renaming or removing required fields will fail the build; extra fields are not part of the approved v1 content model.
+These fields are used by the app and checked by `npm run validate:content`. The core app loader in `src/lib/lessons.ts` also validates the fields it needs to build pages. Do not invent new fields. Do not rename existing fields. Renaming or removing required fields will fail the build or content validation; extra fields are not part of the approved v1 content model.
 
 | Field        | Type                       | Required | Notes                                                                 |
 | ------------ | -------------------------- | -------- | --------------------------------------------------------------------- |
 | `title`      | string                     | Yes      | Clear, simple, describes what the lesson explains.                    |
 | `bigIdea`    | string                     | Yes      | One sentence. The single main point of the lesson.                    |
-| `description`| string                     | No       | Short library-card description. Optional but useful.                  |
+| `description`| string                     | Yes      | Short library-card description. Required by content validation.       |
 | `sourceType` | string                     | No       | Free text. Examples: `article`, `book chapter`, `video transcript`.   |
 | `status`     | `"draft"` or `"ready"`     | Yes      | Only these two values are accepted.                                   |
 | `createdAt`  | string (ISO date)          | No       | Optional, but recommended by convention. Example: `2026-05-05`.       |
@@ -123,6 +127,7 @@ Convention notes:
 - `createdAt` and `updatedAt` are optional in the schema, but you should include them for real lessons.
 - Update `updatedAt` whenever the lesson body or frontmatter changes meaningfully.
 - Use ISO date format (`YYYY-MM-DD`).
+- The app build can load lessons without `description`, but `npm run validate:content` requires it so library cards stay useful and consistent.
 
 ---
 
@@ -499,6 +504,7 @@ Before you finish, confirm each item:
 - [ ] Any "Suggested visual" section uses Type, Purpose, Description, Labels, Layout idea, and What to notice.
 - [ ] No quiz content has been added.
 - [ ] No app code, dependencies, or frontmatter fields have been changed.
+- [ ] `npm run validate:content` succeeds. Fix errors before merging. Review warnings carefully.
 - [ ] `npm run build` succeeds.
 
 Remember: the build only catches basic metadata, type, content loading, and static build errors. It does not prove source coverage or lesson quality.
