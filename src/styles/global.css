@@ -424,9 +424,9 @@ code {
 
 .lesson-sections a {
   display: inline-flex;
-  min-height: 2.25rem;
+  min-height: 2.75rem;
   align-items: center;
-  padding: 0.35rem 0.7rem;
+  padding: 0.45rem 0.8rem;
   color: var(--ink-soft);
   background: var(--paper-soft);
   border: 1px solid var(--border-soft);
