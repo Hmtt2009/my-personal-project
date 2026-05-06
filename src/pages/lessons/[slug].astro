@@ -59,7 +59,27 @@ function isExternalUrl(value: string): boolean {
   return value.startsWith("http://") || value.startsWith("https://");
 }
 
+function formatSourceLabel(source: string, index: number): string {
+  const fallback = `Source ${index + 1}`;
+
+  if (isExternalUrl(source)) {
+    try {
+      const url = new URL(source);
+      const host = url.hostname.replace(/^www\./, "");
+      return `${fallback}: ${host}`;
+    } catch {
+      return fallback;
+    }
+  }
+
+  const trimmed = source.replace(/\/$/, "");
+  const filename = trimmed.split("/").at(-1);
+
+  return filename ? `${fallback}: ${filename}` : fallback;
+}
+
 const metaLine = buildMetaLine();
+const sourceCountLabel = `${lesson.sourceRef.length} ${lesson.sourceRef.length === 1 ? "source" : "sources"}`;
 const tocItems = lesson.headings.filter((heading) => heading.depth === 2);
 const showToc = tocItems.length >= 2;
 ---
@@ -77,66 +97,73 @@ const showToc = tocItems.length >= 2;
   </head>
   <body class="reading-page">
     <main class="reading-shell">
-      <a class="back-link" href={import.meta.env.BASE_URL}>← Back to library</a>
+      <nav class="reading-nav" aria-label="Lesson navigation">
+        <a class="back-link" href={import.meta.env.BASE_URL}>Back to library</a>
+        <span class={`status-badge status-${lesson.status}`}>
+          {lesson.status}
+        </span>
+      </nav>
 
       <article class="reading-article">
         <header class="reading-hero">
           <p class="kicker">Prepared lesson</p>
-          <h1>
-            {lesson.title}
-            {lesson.status === "draft" && (
-              <span class="draft-badge">Draft</span>
-            )}
-          </h1>
+          <h1>{lesson.title}</h1>
           <p class="lesson-big-idea">{lesson.bigIdea}</p>
           {lesson.description && (
             <p class="lesson-description">{lesson.description}</p>
           )}
-          {metaLine && <p class="lesson-meta-line">{metaLine}</p>}
+          <div class="lesson-meta-row" aria-label="Lesson metadata">
+            {metaLine && <span>{metaLine}</span>}
+            <span>{sourceCountLabel}</span>
+          </div>
         </header>
 
-        <div class="reading-layout">
-          {showToc && (
-            <aside class="toc-panel" aria-label="Lesson sections">
-              <details class="lesson-toc" open>
-                <summary>Sections ({tocItems.length})</summary>
-                <ol class="lesson-toc-list">
-                  {tocItems.map((heading) => (
-                    <li>
-                      <a href={`#${heading.slug}`}>{heading.text}</a>
-                    </li>
-                  ))}
-                </ol>
-              </details>
-            </aside>
-          )}
+        {
+          showToc && (
+            <nav class="lesson-sections" aria-label="Lesson sections">
+              <p class="section-kicker">Sections</p>
+              <ol>
+                {tocItems.map((heading) => (
+                  <li>
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )
+        }
 
-          <div class="reading-column">
-            <section class="lesson-body" aria-label="Simplified lesson">
-              <Content />
-            </section>
+        <section class="lesson-body" aria-label="Simplified lesson">
+          <Content />
+        </section>
 
-            <section class="source-reference" aria-labelledby="source-reference-title">
-              <h2 id="source-reference-title">Where this came from</h2>
-              <p>This lesson was simplified from the material below.</p>
-              <ul>
-                {lesson.sourceRef.map((source) =>
-                  isExternalUrl(source) ? (
-                    <li>
-                      <a href={source} rel="noreferrer">
-                        {source}
-                      </a>
-                    </li>
-                  ) : (
-                    <li>
-                      <code>{source}</code>
-                    </li>
-                  )
-                )}
-              </ul>
-            </section>
+        <section class="source-reference" aria-labelledby="source-reference-title">
+          <div>
+            <p class="section-kicker">Reference</p>
+            <h2 id="source-reference-title">Source material</h2>
           </div>
-        </div>
+          <p>This lesson was prepared from the references below. The full source stays outside the main reading flow.</p>
+          <ul>
+            {lesson.sourceRef.map((source, index) =>
+              isExternalUrl(source) ? (
+                <li>
+                  <a
+                    href={source}
+                    rel="noreferrer"
+                    title={source}
+                    aria-label={`Open source reference: ${source}`}
+                  >
+                    {formatSourceLabel(source, index)}
+                  </a>
+                </li>
+              ) : (
+                <li>
+                  <code title={source}>{formatSourceLabel(source, index)}</code>
+                </li>
+              )
+            )}
+          </ul>
+        </section>
       </article>
     </main>
   </body>
