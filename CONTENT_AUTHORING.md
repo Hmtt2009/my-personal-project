@@ -2,11 +2,15 @@
 
 A guide for turning source material into a prepared lesson for the Personal Learning Reader.
 
-This file is written for any AI assistant (Codex, Claude Code, ChatGPT, Gemini, or another tool with access to this repository) and for the human user. The goal is that any assistant following this guide produces lessons in the same style and quality.
+This file is the canonical content-authoring guide for any AI assistant (Codex, Claude Code, ChatGPT, Gemini, or another tool with access to this repository) and for the human user. The goal is that any assistant following this guide produces lessons in the same style and quality.
 
 Lesson preparation happens **outside** the running app. The app only reads finished Markdown files from `content/lessons/`. There is no runtime AI, no upload flow, no database, and no quiz system in v1. Do not change that while authoring content.
 
-For repo-wide rules see `AGENTS.md`. For the full product intent see `.planning/PROJECT.md` and `.planning/REQUIREMENTS.md`. The frontmatter fields described here are enforced at build time by `src/lib/lessons.ts` — if a required field is missing or has the wrong type, the build will fail.
+For repo-wide rules see `AGENTS.md`. For the full product intent see `.planning/PROJECT.md` and `.planning/REQUIREMENTS.md`.
+
+Build validation is useful, but limited. The build checks basic metadata, type errors, content loading, and static route generation. It does **not** prove lesson quality, full source coverage, factual faithfulness, or compliance with the writing philosophy. Assistants must still perform the source inventory, source coverage pass, and writing-quality checks in this guide.
+
+`content/lessons/sample.md` is only a smoke test fixture for the content model and build. It is not a quality example and should not be copied as a lesson-writing pattern.
 
 ---
 
@@ -32,9 +36,12 @@ Do not use this guide to:
 
 1. Place source material in `content/sources/[lesson-slug]/`.
 2. Pick a slug. Use the same slug for the source folder and the lesson file.
-3. Create the lesson file at `content/lessons/[lesson-slug].md`.
-4. Write the YAML frontmatter and the lesson body.
-5. Set `status: draft` while you write. Set `status: ready` only when the lesson passes the validation checklist.
+3. Inventory all relevant source files in that folder before writing.
+4. Create the lesson file at `content/lessons/[lesson-slug].md`.
+5. Write the YAML frontmatter and the lesson body.
+6. Set `status: draft` while you write.
+7. Run a source coverage pass before considering the lesson ready.
+8. Set `status: ready` only when the user explicitly approves that promotion.
 
 ---
 
@@ -61,6 +68,14 @@ Examples:
 - The assistant should read source files as input but should not edit them.
 - Source files are not shown in the app reading view by default. They are reference only.
 
+Source inventory step:
+
+- List the files in the source folder before writing.
+- Read all relevant text or Markdown files in the source folder.
+- Identify which files were used.
+- If a file is skipped, note why.
+- Do not create the prepared lesson until the relevant source material has been reviewed.
+
 ---
 
 ## 5. Where to create the prepared lesson
@@ -74,7 +89,7 @@ Examples:
 
 ## 6. Required YAML frontmatter
 
-These fields are validated by `src/lib/lessons.ts`. Do not invent new fields. Do not rename existing fields.
+These fields are validated by `src/lib/lessons.ts`. Do not invent new fields. Do not rename existing fields. Renaming or removing required fields will fail the build; extra fields are not part of the approved v1 content model.
 
 | Field        | Type                       | Required | Notes                                                                 |
 | ------------ | -------------------------- | -------- | --------------------------------------------------------------------- |
@@ -120,6 +135,7 @@ Convention notes:
   - A repo-relative path, such as `content/sources/photosynthesis/chapter-3.pdf`, or
   - A stable external URL, such as `https://example.org/long-form-article`.
 - Use repo-relative paths when the source file lives in this repository. Use a URL only when the source is external and stable.
+- For real lessons, prefer concrete source files or stable URLs. Avoid folder-only references unless the source is intentionally treated as one documented bundle.
 - One lesson may cite multiple sources. List every source you actually used.
 - Never invent a source. Never list a file that does not exist.
 
@@ -252,35 +268,60 @@ The good rewrite keeps every idea: chlorophyll, sunlight, glucose, water and air
 
 The app does not generate or display images in v1. Visuals are described in plain text only.
 
+Use one heading for v1:
+
+```markdown
+## Suggested visual
+```
+
 When to add a "Suggested visual" section:
 
 - The lesson has a process, a comparison, a structure, or relationships between parts.
 - A reader would understand the idea more easily if they could see it.
+- The visual teaches the idea instead of decorating the page.
+
+Skip the section when:
+
+- The idea is already easy to understand without a visual.
+- The visual would repeat the text without adding clarity.
+- You would need to invent visual details not grounded in the source.
 
 How to write the section:
 
-- Describe what the visual shows.
-- Describe the labels, axes, arrows, or rows and columns.
-- Describe what the reader should notice.
+- `Type`: The kind of visual, such as drawing, diagram, table, chart, timeline, or flowchart.
+- `Purpose`: What the visual helps the reader understand.
+- `Description`: What the visual shows.
+- `Labels`: The labels, axes, arrows, boxes, or rows and columns.
+- `Layout idea`: How the parts should be arranged.
+- `What to notice`: The main thing the reader should learn from looking at it.
 
 What not to do:
 
 - Do not generate, embed, or link to image files.
 - Do not link to external image URLs.
+- Do not require Mermaid, SVG, canvas, or another diagram system in v1.
 - Do not add a "Suggested visual" section just to fill the structure. Skip it when no visual would help.
 
 Example:
 
 > **Suggested visual**
 >
-> A simple diagram of a leaf with three arrows.
+> Type: Simple process diagram.
 >
-> - One arrow labeled "Sunlight" points down onto the leaf.
-> - One arrow labeled "Water" points up from the roots into the leaf.
-> - One arrow labeled "Air (carbon dioxide)" points into the leaf from the side.
-> - One arrow labeled "Oxygen" points out of the leaf back into the air.
+> Purpose: Show what a leaf takes in and what it gives out.
 >
-> The reader should notice that the leaf takes in three things and gives one thing back.
+> Description: A simple diagram of a leaf with arrows moving in and out.
+>
+> Labels:
+>
+> - "Sunlight" points down onto the leaf.
+> - "Water" points up from the roots into the leaf.
+> - "Air (carbon dioxide)" points into the leaf from the side.
+> - "Oxygen" points out of the leaf back into the air.
+>
+> Layout idea: Put the leaf in the center. Put the incoming arrows on the left and top. Put the outgoing oxygen arrow on the right.
+>
+> What to notice: The leaf takes in three things and gives one thing back.
 
 ---
 
@@ -299,17 +340,32 @@ Example:
 - Frontmatter is complete and valid.
 - Source references point to real files or real URLs.
 - No placeholders, no TODOs, no invented facts.
+- The user has explicitly approved marking the lesson as ready.
+
+An assistant may prepare a ready candidate, but it must keep `status: draft` until the user explicitly says to mark that lesson `ready`.
 
 Promotion checklist (run before flipping `draft` to `ready`):
 
 - [ ] All required frontmatter fields are present and valid.
 - [ ] `sourceRef` lists every source actually used, and every entry resolves.
+- [ ] A source inventory was completed.
+- [ ] A source coverage pass was completed.
 - [ ] All applicable structure sections are present and in the correct order.
 - [ ] The "Simple explanation" section covers every important idea from the source.
 - [ ] No section is filled with fake content just to satisfy the structure.
 - [ ] No new facts have been invented.
 - [ ] Voice and language rules are followed throughout.
 - [ ] `updatedAt` reflects the current date.
+- [ ] The user explicitly approved the `ready` status.
+
+Source coverage pass:
+
+- Compare the source headings and major claims against the prepared lesson.
+- Confirm that every important idea is represented in simple language.
+- Confirm that difficult ideas were explained, not skipped.
+- Confirm that examples and analogies support the source meaning.
+- Remove unsupported claims or clearly flag uncertainty.
+- Do not mark the lesson ready if important source ideas are missing.
 
 ---
 
@@ -324,7 +380,7 @@ Promotion checklist (run before flipping `draft` to `ready`):
 - Do not add quizzes, quiz UI, or quiz data. Quiz scope is deferred.
 - Do not modify app code while authoring content.
 - Do not add dependencies.
-- Do not add or rename frontmatter fields. The build will fail.
+- Do not add or rename frontmatter fields. Renaming required fields will fail the build; extra fields are not approved for v1.
 - Do not edit the source files in `content/sources/`.
 
 ---
@@ -332,6 +388,8 @@ Promotion checklist (run before flipping `draft` to `ready`):
 ## 14. Full worked example
 
 The following is a complete, short prepared lesson. It is shown here only as a style and structure template. Do not copy it into `content/lessons/` — it is not a real lesson and should not appear in the app library.
+
+The real `content/lessons/sample.md` file is different. It exists only as a smoke test fixture for the app and build, not as a quality example.
 
 ````markdown
 ---
@@ -348,7 +406,7 @@ sourceRef:
 
 # How Rain Forms
 
-## Big idea
+## One-sentence big idea
 
 Rain happens when tiny water drops in clouds join together and become heavy enough to fall.
 
@@ -390,13 +448,21 @@ When a drop becomes too heavy for the air to hold, it falls. We call the falling
 
 ## Suggested visual
 
-A simple loop drawing of the water cycle:
+Type: Loop diagram.
 
-- An arrow labeled "Evaporation" goes up from a lake.
-- A cloud sits at the top.
-- An arrow labeled "Rain" goes down from the cloud back to the lake.
+Purpose: Show that rain is part of a repeating cycle.
 
-The reader should notice that the water keeps moving in a circle.
+Description: A simple loop drawing of the water cycle.
+
+Labels:
+
+- "Evaporation" on an arrow going up from a lake.
+- "Cloud" at the top of the loop.
+- "Rain" on an arrow going down from the cloud back to the lake.
+
+Layout idea: Put the lake at the bottom, the cloud at the top, and two curved arrows connecting them.
+
+What to notice: The water keeps moving in a circle.
 
 ## Common confusion
 
@@ -430,6 +496,9 @@ Before you finish, confirm each item:
 - [ ] The "Simple explanation" section covers every important idea from the source.
 - [ ] No facts have been invented.
 - [ ] No images have been generated, embedded, or linked.
+- [ ] Any "Suggested visual" section uses Type, Purpose, Description, Labels, Layout idea, and What to notice.
 - [ ] No quiz content has been added.
 - [ ] No app code, dependencies, or frontmatter fields have been changed.
-- [ ] `npm run build` succeeds. The build will catch frontmatter validation errors.
+- [ ] `npm run build` succeeds.
+
+Remember: the build only catches basic metadata, type, content loading, and static build errors. It does not prove source coverage or lesson quality.

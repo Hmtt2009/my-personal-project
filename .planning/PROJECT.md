@@ -31,7 +31,7 @@ The `sourceRef` metadata field should allow one or more source references becaus
 
 Lesson status can be `draft` or `ready`.
 
-A future content-authoring guide should explain how any AI assistant can transform source material into a prepared lesson.
+`CONTENT_AUTHORING.md` is the canonical guide for how any AI assistant should transform source material into a prepared lesson.
 
 ## Learning Style
 
@@ -85,9 +85,11 @@ Examples:
 Visual and creative learning aids:
 
 - If the material would benefit from a drawing, diagram, table, flowchart, or visual explanation, the prepared lesson should include a suggested visual.
-- The app may not generate visuals in v1.
+- The app does not generate visuals in v1.
 - Prepared lesson content should still be able to describe a helpful visual.
-- Add a "Suggested visual" section when useful, with a short description of the drawing, diagram, or chart.
+- Add a "Suggested visual" section when useful.
+- Skip the suggested visual when it would not help understanding.
+- No Mermaid, SVG, canvas, or generated-image system is required in v1.
 
 Must avoid:
 
@@ -194,7 +196,9 @@ A major goal is to create clear instructions that any AI coding or writing assis
 
 The same content preparation rules should work with Codex, Claude Code, ChatGPT, Gemini, or any AI tool that has access to the project folder.
 
-The project should include a clear content-authoring instruction file so different AI tools can produce lessons in the same style and quality.
+`CONTENT_AUTHORING.md` is the canonical content-authoring instruction file so different AI tools can produce lessons in the same style and quality.
+
+Build validation checks basic metadata, content loading, and static build errors. It does not prove full source coverage, lesson quality, or writing philosophy compliance. Assistants must still perform a source inventory and source coverage pass.
 
 ## MVP Goal
 
@@ -232,10 +236,20 @@ The first version should prove the reader loop:
 
 The product direction is updated: v1 is a static or local-first personal learning reader.
 
-The Phase 2 foundation stack is approved.
+Phases 0-6 are complete.
 
 The approved foundation stack is Astro with Markdown content files, YAML frontmatter, static build output, no backend, no database, no authentication, no runtime AI/API calls, no upload flow, and minimal CSS focused on reading comfort.
 
-No Phase 3 repository content loading, Phase 4 library, or reading view work should be written until approved.
+The current MVP includes:
+
+- Astro foundation.
+- Build-time repository content loading.
+- Library UI.
+- Static lesson detail pages.
+- Reading View.
+- MVP QA.
+- Passing `npm run build`.
+
+The app remains static and local-first. It does not include backend, API routes, database, auth, upload flow, runtime AI, quiz implementation, or generated images.
 
 Quiz planning must remain deferred until the user starts a separate quiz discussion.

@@ -114,6 +114,8 @@ The suggested visual can be text-only in v1.
 
 The app must not generate images in v1.
 
+The app must not require Mermaid, SVG, canvas, or generated-image rendering in v1.
+
 ### Prepared Lesson Structure
 
 Each prepared lesson should follow this structure from top to bottom:
@@ -191,6 +193,10 @@ Describe what kind of drawing, diagram, chart, table, or flowchart would help.
 The app does not need to generate the visual in v1.
 
 This section is only a clear instruction for a future visual.
+
+Use the standard fields Type, Purpose, Description, Labels, Layout idea, and What to notice when a visual is useful.
+
+Skip this section when a visual would not improve understanding.
 
 9. Common confusion
 
@@ -302,17 +308,21 @@ The prepared lesson must avoid:
 
 The project must include a clear content-authoring instruction file.
 
-That instruction file should let Codex, Claude Code, ChatGPT, Gemini, or another AI assistant produce simplified lessons in the same style and quality.
+`CONTENT_AUTHORING.md` is the canonical guide for Codex, Claude Code, ChatGPT, Gemini, or another AI assistant to produce simplified lessons in the same style and quality.
 
 The instruction file must explain that content preparation happens outside the running app.
 
 The app must read and display prepared lesson files only.
 
-Details still to collect from the user before implementation:
+The instruction file must require:
 
-- Content file format.
-- Lesson metadata.
-- Repository content organization.
+- Source inventory before writing.
+- Source coverage pass before a lesson can be considered ready.
+- New lessons to start as `draft`.
+- User approval before marking a lesson `ready`.
+- Real lessons to preferably reference concrete source files or stable URLs in `sourceRef`.
+
+Build validation only verifies basic metadata, type, content loading, and static build errors. It does not guarantee full source coverage, lesson quality, or compliance with the writing philosophy.
 
 ## Non-Goals For V1
 
@@ -339,13 +349,15 @@ The first version must not include:
 - AI generation UI.
 - API controls.
 
-## Open Product Questions
+## Resolved Product Decisions
 
-These should be answered before implementation:
-
-- What content file format should prepared lessons use?
-- What metadata should each lesson include?
-- What content organization should the repository use?
+- Prepared lessons use Markdown with YAML frontmatter.
+- Prepared lessons live in `content/lessons/[lesson-slug].md`.
+- Source materials live in `content/sources/[lesson-slug]/`.
+- `sourceRef` is a non-empty array of one or more source references.
+- Lesson status is `draft` or `ready`.
+- The simplified lesson is the main reading experience.
+- Source material is reference-only in v1.
 
 ## Future Quiz Direction
 
@@ -367,5 +379,9 @@ Quizzes should remain a future phase that requires a separate discussion before 
 
 The following decisions are intentionally not made yet:
 
-- Build-time content loading approach.
-- Deployment target.
+- Quiz philosophy.
+- Quiz UI.
+- Quiz data models.
+- Runtime AI generation.
+- Upload workflows.
+- Any future backend or database needs.
