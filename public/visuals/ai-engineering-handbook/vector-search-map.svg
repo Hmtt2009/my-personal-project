@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" viewBox="0 0 360 640">
+  <title>Vector search meaning map</title>
+  <desc>A comparison of exact word search and vector search, showing that vector search finds nearby meanings such as cars, vehicles, trucks, and autos.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#4f6655" />
+    </marker>
+    <style>
+      .bg { fill: #fffdf8; }
+      .panel { fill: #fbf8ef; stroke: #ded7c8; stroke-width: 2; }
+      .strong { fill: #eef3ed; stroke: #4f6655; stroke-width: 2; }
+      .muted { fill: #f4f0e6; stroke: #ebe4d6; stroke-width: 2; }
+      .title { fill: #20211d; font: 700 22px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .label { fill: #20211d; font: 700 17px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .note { fill: #4c4f46; font: 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .dot { fill: #4f6655; }
+      .far-dot { fill: #c8b99f; }
+      .ring { fill: none; stroke: #4f6655; stroke-width: 2; stroke-dasharray: 6 7; }
+      .arrow { fill: none; stroke: #4f6655; stroke-width: 2.4; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="1" y="1" width="358" height="638" rx="18" />
+  <rect class="panel" x="14" y="14" width="332" height="612" rx="16" />
+
+  <text class="title" x="30" y="54">Meaning search</text>
+  <text class="note" x="30" y="80">Close ideas can be found together.</text>
+
+  <rect class="muted" x="36" y="112" width="288" height="116" rx="12" />
+  <text class="label" x="180" y="146" text-anchor="middle">Exact word search</text>
+  <text class="note" x="86" y="180" text-anchor="middle">"cars"</text>
+  <path class="arrow" d="M124 176 H234" />
+  <text class="note" x="278" y="180" text-anchor="middle">cars</text>
+  <text class="note" x="180" y="208" text-anchor="middle">Finds matching words</text>
+
+  <rect class="strong" x="36" y="260" width="288" height="308" rx="12" />
+  <text class="label" x="180" y="294" text-anchor="middle">Vector search</text>
+  <text class="note" x="180" y="318" text-anchor="middle">Finds matching meaning</text>
+
+  <circle class="ring" cx="180" cy="438" r="92" />
+  <circle class="dot" cx="180" cy="438" r="8" />
+  <text class="label" x="180" y="410" text-anchor="middle">cars</text>
+
+  <circle class="dot" cx="118" cy="398" r="7" />
+  <text class="note" x="104" y="374" text-anchor="middle">vehicles</text>
+
+  <circle class="dot" cx="246" cy="404" r="7" />
+  <text class="note" x="264" y="386" text-anchor="middle">trucks</text>
+
+  <circle class="dot" cx="136" cy="512" r="7" />
+  <text class="note" x="108" y="542" text-anchor="middle">autos</text>
+
+  <circle class="far-dot" cx="264" cy="520" r="7" />
+  <text class="note" x="264" y="550" text-anchor="middle">banana</text>
+</svg>

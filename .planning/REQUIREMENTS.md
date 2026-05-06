@@ -112,9 +112,13 @@ If a lesson has a suggested visual, show it as a simple section in the lesson.
 
 The suggested visual can be text-only in v1.
 
+Approved static SVG diagrams may also appear inside lesson Markdown when they clearly help understanding.
+
+Static SVG diagrams must live in `public/visuals/[lesson-slug]/` and be referenced from the prepared lesson.
+
 The app must not generate images in v1.
 
-The app must not require Mermaid, SVG, canvas, or generated-image rendering in v1.
+The app must not require Mermaid, canvas, generated-image rendering, or a runtime diagram system in v1.
 
 ### Prepared Lesson Structure
 
@@ -192,7 +196,7 @@ Describe what kind of drawing, diagram, chart, table, or flowchart would help.
 
 The app does not need to generate the visual in v1.
 
-This section is only a clear instruction for a future visual.
+This section can be a clear instruction for a future visual, or it can document the intent behind approved static SVG diagrams.
 
 Use the standard fields Type, Purpose, Description, Labels, Layout idea, and What to notice when a visual is useful.
 
@@ -291,7 +295,7 @@ Visual aid rules:
 
 - If a drawing, diagram, table, flowchart, or visual explanation would help, the prepared lesson should include a suggested visual.
 - The app may not generate the visual in v1.
-- The lesson content should still describe what visual should be created.
+- The lesson content should describe what visual should be created, or reference an approved static SVG visual that lives in `public/visuals/[lesson-slug]/`.
 - Use a "Suggested visual" section when helpful.
 
 The prepared lesson must avoid:

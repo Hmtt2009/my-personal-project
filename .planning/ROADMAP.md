@@ -84,7 +84,7 @@ Goal: make simplified lessons pleasant to read.
 - Avoid side-by-side long document comparison in v1.
 - Keep the layout clean and readable.
 - Keep the design ready for later iPhone morning reading mode.
-- Show suggested visuals as text-only lesson sections when present.
+- Show suggested visuals as text sections when present, and support approved static SVG diagrams when they teach a concept.
 
 ## Phase 6: MVP QA
 
