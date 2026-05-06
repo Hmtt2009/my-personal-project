@@ -53,10 +53,11 @@ Repo root: `/CONTENT_AUTHORING.md` — siblings with `README.md` and `AGENTS.md`
     - DO: re-explain every important idea in simpler language.
     - DON'T: shorten, compress, skip hard parts, or produce a TL;DR.
     - Include a worked micro-example: a 3-sentence dense paragraph and the same idea re-explained simply across a few short sentences — to show "transformed, not shrunk."
-11. **Suggesting visuals without generating images** — rules:
+11. **Static visuals and suggested visuals** — rules:
     - Add a "Suggested visual" section when a drawing/diagram/table/flowchart would help.
     - Describe the visual in plain text: what it shows, what the axes/labels/arrows mean.
-    - Never generate, embed, or link to an image file in v1.
+    - Allow approved static SVG diagrams in `public/visuals/[lesson-slug]/` when they clearly teach a concept.
+    - Never generate images or link to external image files in v1.
     - Skip the section when no visual would actually help — don't force it.
 12. **Draft vs ready** — clear contract:
     - `draft`: in progress, may have placeholders, may be incomplete; still appears in the library (current behavior).
@@ -69,6 +70,7 @@ Repo root: `/CONTENT_AUTHORING.md` — siblings with `README.md` and `AGENTS.md`
     - Don't use academic or dense language.
     - Don't write childish/silly prose.
     - Don't generate images.
+    - Don't add decorative images that do not teach.
     - Don't add quizzes, quiz UI, or quiz data — quiz scope is deferred.
     - Don't modify app code while authoring content.
     - Don't add dependencies.
@@ -80,7 +82,7 @@ Repo root: `/CONTENT_AUTHORING.md` — siblings with `README.md` and `AGENTS.md`
     - [ ] `sourceRef` non-empty and points to real files/URLs
     - [ ] Status is `draft` or `ready`
     - [ ] All applicable structure sections present, in order
-    - [ ] No invented facts, no summarization, no images
+    - [ ] No invented facts, no summarization, no generated or decorative images
     - [ ] `npm run build` succeeds (catches frontmatter validation errors)
 
 ## Tone & length

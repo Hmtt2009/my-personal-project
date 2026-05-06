@@ -87,9 +87,10 @@ Visual and creative learning aids:
 - If the material would benefit from a drawing, diagram, table, flowchart, or visual explanation, the prepared lesson should include a suggested visual.
 - The app does not generate visuals in v1.
 - Prepared lesson content should still be able to describe a helpful visual.
+- Approved static SVG diagrams may be stored in `public/visuals/[lesson-slug]/` and referenced from prepared Markdown when they clearly help understanding.
 - Add a "Suggested visual" section when useful.
 - Skip the suggested visual when it would not help understanding.
-- No Mermaid, SVG, canvas, or generated-image system is required in v1.
+- No Mermaid, canvas, generated-image system, or runtime diagram system is required in v1.
 
 Must avoid:
 
@@ -180,6 +181,7 @@ Visual suggestions:
 
 - If a lesson has a suggested visual, show it as a simple section in the lesson.
 - The suggested visual can be text-only in v1.
+- Approved static SVG diagrams can appear in the lesson body when they teach a concept.
 - Do not generate images in v1.
 
 Must avoid:
@@ -250,6 +252,6 @@ The current MVP includes:
 - MVP QA.
 - Passing `npm run build`.
 
-The app remains static and local-first. It does not include backend, API routes, database, auth, upload flow, runtime AI, quiz implementation, or generated images.
+The app remains static and local-first. It does not include backend, API routes, database, auth, upload flow, runtime AI, quiz implementation, or generated images. Approved static SVG lesson diagrams are repository assets, not generated images.
 
 Quiz planning must remain deferred until the user starts a separate quiz discussion.

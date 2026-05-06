@@ -34,6 +34,7 @@
 - The Reading View shows the simplified Markdown lesson as the main content.
 - Source references are supporting reference only and are not the main reading experience.
 - MVP QA passed for the static reader loop: build, library, lesson loading, reading page, and mobile acceptability.
+- Approved static SVG lesson diagrams may live in `public/visuals/[lesson-slug]/` and be referenced from prepared Markdown when they help understanding.
 
 ## Current Guardrails
 
@@ -45,6 +46,7 @@
 - No runtime AI calls exist.
 - No quiz implementation exists.
 - No generated images exist in v1.
+- Static SVG lesson diagrams are allowed as checked-in repository assets when explicitly approved.
 - No UI framework has been added.
 - The repository content remains the source of truth for v1.
 

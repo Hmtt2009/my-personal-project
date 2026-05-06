@@ -31,7 +31,7 @@ Do not use this guide to:
 - Add app features.
 - Add or change frontmatter fields.
 - Build quizzes or quiz UI.
-- Generate or embed images.
+- Generate images.
 - Call an AI service from inside the app.
 
 ---
@@ -176,7 +176,7 @@ Each prepared lesson follows this order from top to bottom. Use Markdown heading
 5. **Step-by-step breakdown** — When the topic has a process, sequence, or workflow, walk through it in numbered steps.
 6. **Key terms** — Important terms from the source. Use the format `Term: simple meaning.` Only include terms that are actually useful.
 7. **Tiny examples** — Small, everyday examples that make the idea easier to picture.
-8. **Suggested visual** — A plain-text description of a drawing, diagram, table, or chart that would help. Text only. No image files.
+8. **Suggested visual** — A plain-text Visual Spec for a drawing, diagram, table, or chart that would help. A lesson may also include approved static SVG diagrams near the related explanation, using the rules in section 11.
 9. **Common confusion** — What people often misunderstand, and the correct way to think about it.
 10. **What you should remember** — A short recap of the most important points. Not a replacement for the full lesson.
 11. **Optional next questions** — A few follow-up questions the reader could explore later. Plain questions only. Not quiz items.
@@ -269,11 +269,55 @@ The good rewrite keeps every idea: chlorophyll, sunlight, glucose, water and air
 
 ---
 
-## 11. Suggesting visuals without generating images
+## 11. Static visuals and suggested visuals
 
-The app does not generate or display images in v1. Visuals are described in plain text only.
+The app does not generate images in v1. When a visual would clearly help understanding, use static, hand-authored SVG files stored in the repository.
 
-Use one heading for v1:
+Static visual asset path:
+
+```text
+public/visuals/[lesson-slug]/[visual-name].svg
+```
+
+Naming rules:
+
+- Use the same lesson slug as the source folder and lesson file.
+- Use lowercase kebab-case filenames.
+- Use clear names, such as `rag-pipeline.svg`, `vector-search-map.svg`, or `agent-workflow.svg`.
+- Do not use external image URLs.
+- Do not use generated image APIs.
+- Do not require Mermaid, MDX, canvas, or a diagram rendering system in v1.
+
+How to reference a static visual in lesson Markdown:
+
+```markdown
+![Short alt text that explains the diagram](/my-personal-project/visuals/[lesson-slug]/[visual-name].svg)
+
+*Diagram: One short sentence explaining what the reader should notice.*
+```
+
+Use the `/my-personal-project/visuals/...` path because this repository is built for GitHub Pages with that Astro base path.
+
+Place diagrams near the explanation they support. Do not place every diagram at the end of the lesson. The reader should see the visual while reading the related idea.
+
+Visual quality rules:
+
+- A visual must teach, not decorate.
+- Use simple boxes, arrows, labels, comparisons, timelines, or flows.
+- Keep labels short and readable.
+- Match the app style: warm neutral background, charcoal text, pale borders, and deep sage or ink accents.
+- Keep visuals calm and adult. Do not make them childish or playful.
+- Make visuals useful on iPhone. Avoid tiny labels and crowded layouts.
+- Add a short caption under every static visual.
+
+Skip a static visual when:
+
+- The idea is already easy to understand without it.
+- The visual would repeat the text without adding clarity.
+- You would need to invent details that are not grounded in the source.
+- The visual would become too dense to read comfortably.
+
+Use one heading for the plain-text Visual Spec:
 
 ```markdown
 ## Suggested visual
@@ -284,6 +328,7 @@ When to add a "Suggested visual" section:
 - The lesson has a process, a comparison, a structure, or relationships between parts.
 - A reader would understand the idea more easily if they could see it.
 - The visual teaches the idea instead of decorating the page.
+- The lesson needs a future visual idea, or you want to document the intent behind the static visuals.
 
 Skip the section when:
 
@@ -302,9 +347,9 @@ How to write the section:
 
 What not to do:
 
-- Do not generate, embed, or link to image files.
+- Do not generate images.
 - Do not link to external image URLs.
-- Do not require Mermaid, SVG, canvas, or another diagram system in v1.
+- Do not require Mermaid, canvas, or another diagram system in v1.
 - Do not add a "Suggested visual" section just to fill the structure. Skip it when no visual would help.
 
 Example:
@@ -381,7 +426,9 @@ Source coverage pass:
 - Do not invent facts that are not in the source.
 - Do not use academic or dense language.
 - Do not write in a childish or silly tone.
-- Do not generate, embed, or link to images.
+- Do not generate images.
+- Do not link to external images.
+- Do not add decorative images that do not teach.
 - Do not add quizzes, quiz UI, or quiz data. Quiz scope is deferred.
 - Do not modify app code while authoring content.
 - Do not add dependencies.
@@ -500,7 +547,8 @@ Before you finish, confirm each item:
 - [ ] All applicable structure sections are present and in order.
 - [ ] The "Simple explanation" section covers every important idea from the source.
 - [ ] No facts have been invented.
-- [ ] No images have been generated, embedded, or linked.
+- [ ] No images have been generated or linked from external sources.
+- [ ] Any static SVG visuals live in `public/visuals/[lesson-slug]/` and are referenced from the lesson Markdown.
 - [ ] Any "Suggested visual" section uses Type, Purpose, Description, Labels, Layout idea, and What to notice.
 - [ ] No quiz content has been added.
 - [ ] No app code, dependencies, or frontmatter fields have been changed.

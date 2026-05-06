@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" viewBox="0 0 360 640">
+  <title>AI engineering system map</title>
+  <desc>A system diagram showing how a user goal becomes a useful AI system when the model, prompts, knowledge, and tools work together.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M1 1 L9 5 L1 9 Z" fill="#4f6655" />
+    </marker>
+    <style>
+      .bg { fill: #fffdf8; }
+      .panel { fill: #fbf8ef; stroke: #ded7c8; stroke-width: 2; }
+      .strong { fill: #eef3ed; stroke: #4f6655; stroke-width: 2; }
+      .title { fill: #20211d; font: 700 22px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .label { fill: #20211d; font: 700 17px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .note { fill: #4c4f46; font: 14px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .arrow { fill: none; stroke: #4f6655; stroke-width: 2.4; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="1" y="1" width="358" height="638" rx="18" />
+  <rect class="panel" x="14" y="14" width="332" height="612" rx="16" />
+
+  <text class="title" x="30" y="54">AI system map</text>
+  <text class="note" x="30" y="80">The model is one part of the system.</text>
+
+  <rect class="strong" x="52" y="112" width="256" height="70" rx="12" />
+  <text class="label" x="180" y="142" text-anchor="middle">User goal</text>
+  <text class="note" x="180" y="164" text-anchor="middle">What the person wants</text>
+
+  <path class="arrow" d="M180 188 V224" />
+
+  <rect class="panel" x="34" y="232" width="136" height="76" rx="12" />
+  <text class="label" x="102" y="264" text-anchor="middle">LLM brain</text>
+  <text class="note" x="102" y="286" text-anchor="middle">Reads and writes</text>
+
+  <rect class="panel" x="190" y="232" width="136" height="76" rx="12" />
+  <text class="label" x="258" y="264" text-anchor="middle">Prompts</text>
+  <text class="note" x="258" y="286" text-anchor="middle">Rules to follow</text>
+
+  <rect class="panel" x="34" y="332" width="136" height="82" rx="12" />
+  <text class="label" x="102" y="364" text-anchor="middle">Knowledge</text>
+  <text class="note" x="102" y="386" text-anchor="middle">Docs and facts</text>
+
+  <rect class="panel" x="190" y="332" width="136" height="82" rx="12" />
+  <text class="label" x="258" y="364" text-anchor="middle">Tools</text>
+  <text class="note" x="258" y="386" text-anchor="middle">Allowed actions</text>
+
+  <path class="arrow" d="M102 418 C102 456 145 462 180 478" />
+  <path class="arrow" d="M258 418 C258 456 215 462 180 478" />
+
+  <rect class="strong" x="52" y="488" width="256" height="82" rx="12" />
+  <text class="label" x="180" y="520" text-anchor="middle">Useful AI system</text>
+  <text class="note" x="180" y="544" text-anchor="middle">Helps safely with</text>
+  <text class="note" x="180" y="564" text-anchor="middle">a real task</text>
+</svg>

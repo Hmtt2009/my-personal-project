@@ -96,6 +96,10 @@ They may also need customization.
 
 This means adapting a model to a task, a style, or a domain.
 
+![Diagram showing a user goal flowing into an LLM brain, prompts, knowledge, and tools, then into a useful AI system.](/my-personal-project/visuals/ai-engineering-handbook/ai-system-map.svg)
+
+*Diagram: AI engineering connects the model, instructions, knowledge, and tools so a user goal can become a useful system.*
+
 ### Large Language Models
 
 A Large Language Model, or LLM, is like the brain of many modern AI systems.
@@ -192,6 +196,10 @@ The simple idea is this:
 
 A vector database helps the AI find information that means the same thing, even if the words are different.
 
+![Diagram comparing normal word search with vector search that finds close meanings like cars, vehicles, and automobiles.](/my-personal-project/visuals/ai-engineering-handbook/vector-search-map.svg)
+
+*Diagram: Vector search looks for meaning, so it can find related ideas even when the exact words are different.*
+
 ### Retrieval-Augmented Generation
 
 Retrieval-Augmented Generation is called RAG.
@@ -211,6 +219,10 @@ For example, a company assistant may need to answer from company documents.
 The model may not know those documents by itself.
 
 RAG gives the documents to the model at the right time.
+
+![Diagram showing the RAG flow from a user question to document retrieval, context, the language model, and a grounded answer.](/my-personal-project/visuals/ai-engineering-handbook/rag-pipeline.svg)
+
+*Diagram: RAG adds useful source material before the model answers, so the answer can stay closer to the facts.*
 
 There are different types of RAG.
 
@@ -257,6 +269,10 @@ A simple chatbot mostly answers messages.
 An agent can do more.
 
 It may read information, decide what tool to use, call that tool, look at the result, and continue.
+
+![Diagram showing an agent loop from goal to plan, tool use, result observation, and review.](/my-personal-project/visuals/ai-engineering-handbook/agent-workflow.svg)
+
+*Diagram: An agent can plan, use a tool, look at the result, and decide whether to keep going.*
 
 An agent has three basic parts.
 
