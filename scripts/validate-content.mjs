@@ -4,6 +4,7 @@ import process from "node:process";
 
 const rootDir = process.cwd();
 const lessonsDir = path.join(rootDir, "content", "lessons");
+const sourcesDir = path.join(rootDir, "content", "sources");
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
 const requiredFrontmatter = [
@@ -36,6 +37,8 @@ const visualSpecFields = [
 const findings = [];
 
 async function main() {
+  runPathSafetySelfCheck();
+
   const lessonFiles = await getLessonFiles();
 
   if (lessonFiles.length === 0) {
@@ -138,19 +141,15 @@ async function validateSourceRefs(sourceRef, relativeFile, slug) {
       continue;
     }
 
-    if (!ref.startsWith("content/sources/")) {
-      addFinding(
-        "error",
-        relativeFile,
-        `"sourceRef" entry "${ref}" must be under content/sources/ or be a stable URL.`
-      );
+    const resolvedRef = resolveLocalSourceRef(ref, slug);
+
+    if (!resolvedRef.ok) {
+      addFinding("error", relativeFile, `"sourceRef" entry "${ref}" ${resolvedRef.reason}`);
       continue;
     }
 
-    const fullPath = path.join(rootDir, ref);
-
     try {
-      const sourceStat = await stat(fullPath);
+      const sourceStat = await stat(resolvedRef.path);
 
       if (sourceStat.isDirectory() && slug !== "sample") {
         addFinding(
@@ -161,6 +160,66 @@ async function validateSourceRefs(sourceRef, relativeFile, slug) {
       }
     } catch {
       addFinding("error", relativeFile, `"sourceRef" entry "${ref}" does not exist.`);
+    }
+  }
+}
+
+function resolveLocalSourceRef(ref, slug) {
+  const resolvedPath = path.resolve(rootDir, ref);
+  const lessonSourcesDir = path.join(sourcesDir, slug);
+
+  if (!isInsideOrSame(resolvedPath, sourcesDir)) {
+    return {
+      ok: false,
+      reason: `must resolve under content/sources/${slug}/ or be a stable URL.`
+    };
+  }
+
+  if (!isInsideOrSame(resolvedPath, lessonSourcesDir)) {
+    return {
+      ok: false,
+      reason: `must resolve under content/sources/${slug}/ for this lesson.`
+    };
+  }
+
+  return { ok: true, path: resolvedPath };
+}
+
+function isInsideOrSame(childPath, parentPath) {
+  const relativePath = path.relative(parentPath, childPath);
+
+  return (
+    relativePath === "" ||
+    (!relativePath.startsWith("..") && !path.isAbsolute(relativePath))
+  );
+}
+
+function runPathSafetySelfCheck() {
+  const checks = [
+    {
+      ref: "content/sources/example/source.md",
+      slug: "example",
+      ok: true
+    },
+    {
+      ref: "content/sources/other/source.md",
+      slug: "example",
+      ok: false
+    },
+    {
+      ref: "content/sources/example/../../README.md",
+      slug: "example",
+      ok: false
+    }
+  ];
+
+  for (const check of checks) {
+    const result = resolveLocalSourceRef(check.ref, check.slug);
+
+    if (result.ok !== check.ok) {
+      throw new Error(
+        `Validator path-safety self-check failed for "${check.ref}" and slug "${check.slug}".`
+      );
     }
   }
 }
