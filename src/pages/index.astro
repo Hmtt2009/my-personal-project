@@ -36,6 +36,11 @@ function buildCardFootnote(lesson: LessonListItem): string | undefined {
 const readyCount = lessons.filter((lesson) => lesson.status === "ready").length;
 const draftCount = lessons.length - readyCount;
 const lessonCountLabel = `${lessons.length} ${lessons.length === 1 ? "lesson" : "lessons"}`;
+
+function formatSourceCount(lesson: LessonListItem): string {
+  const count = lesson.sourceRef.length;
+  return `${count} ${count === 1 ? "source" : "sources"}`;
+}
 ---
 
 <!doctype html>
@@ -51,33 +56,36 @@ const lessonCountLabel = `${lessons.length} ${lessons.length === 1 ? "lesson" : 
   </head>
   <body class="home-page">
     <main class="app-shell">
+      <header class="site-header" aria-label="Reader">
+        <a class="brand-mark" href={import.meta.env.BASE_URL}>
+          Personal Learning Reader
+        </a>
+        <p>{readyCount} ready / {draftCount} draft</p>
+      </header>
+
       <section class="home-hero" aria-labelledby="page-title">
         <div class="hero-copy">
           <p class="kicker">Personal learning reader</p>
-          <h1 id="page-title">Your learning shelf</h1>
+          <h1 id="page-title">A quiet shelf for clear lessons.</h1>
           <p class="hero-tagline">
-            Simple lessons, written for easy understanding.
+            Prepared lessons from your own materials, rewritten in simple
+            English and kept ready for slow, focused reading.
           </p>
         </div>
 
-        <div class="hero-panel" aria-label="Library summary">
-          <span class="hero-panel-label">Today&apos;s shelf</span>
+        <p class="library-count" aria-label="Library summary">
           <strong>{lessonCountLabel}</strong>
-          <span>
-            {draftCount > 0
-              ? `${draftCount} draft ${draftCount === 1 ? "lesson" : "lessons"}`
-              : "All lessons ready"}
-          </span>
-        </div>
+          <span>prepared for calm reading</span>
+        </p>
       </section>
 
       <section class="library-section" aria-labelledby="library-title">
         <div class="section-heading">
           <div>
             <p class="section-kicker">Library</p>
-            <h2 id="library-title">Pick what to understand next</h2>
+            <h2 id="library-title">Choose a lesson</h2>
           </div>
-          <p>{lessonCountLabel} prepared for slow, clear reading.</p>
+          <p>Each card opens a prepared reading page. The source stays in the background.</p>
         </div>
 
         {
@@ -89,18 +97,16 @@ const lessonCountLabel = `${lessons.length} ${lessons.length === 1 ? "lesson" : 
                 return (
                   <li class="lesson-card">
                     <a class="lesson-card-link" href={`${import.meta.env.BASE_URL}lessons/${lesson.slug}/`}>
-                      <span class="lesson-number" aria-hidden="true">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
+                      <div class="lesson-card-topline">
+                        <span class="lesson-number" aria-hidden="true">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        <span class={`status-badge status-${lesson.status}`}>
+                          {lesson.status}
+                        </span>
+                      </div>
 
                       <div class="lesson-card-content">
-                        <div class="lesson-card-topline">
-                          {footnote && <span>{footnote}</span>}
-                          {lesson.status === "draft" && (
-                            <span class="draft-badge">Draft</span>
-                          )}
-                        </div>
-
                         <h3>{lesson.title}</h3>
                         <p class="lesson-big-idea">{lesson.bigIdea}</p>
                         {lesson.description && (
@@ -108,9 +114,10 @@ const lessonCountLabel = `${lessons.length} ${lessons.length === 1 ? "lesson" : 
                         )}
                       </div>
 
-                      <span class="lesson-card-action" aria-hidden="true">
-                        Read lesson →
-                      </span>
+                      <div class="lesson-card-footer">
+                        <span>{footnote ?? "Prepared lesson"}</span>
+                        <span>{formatSourceCount(lesson)}</span>
+                      </div>
                     </a>
                   </li>
                 );
@@ -118,7 +125,6 @@ const lessonCountLabel = `${lessons.length} ${lessons.length === 1 ? "lesson" : 
             </ol>
           ) : (
             <div class="empty-state">
-              <span aria-hidden="true">✦</span>
               <h3>Nothing to read yet.</h3>
               <p>
                 Add a Markdown lesson to <code>content/lessons/</code> and it
